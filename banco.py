@@ -1,80 +1,108 @@
+from abc import ABC, abstractmethod
 
+class Conta():
+    def __init__(self, numero, cliente):
+        self._saldo = 0
+        self._numero = numero
+        self._agencia = "0001"
+        self._cliente = cliente
+        self._historico = Historico()
 
-menu = """
+    @classmethod
+    def nova_conta(cls, cliente, numero):
+        return cls(numero, cliente)
 
-[d] Depositar
-[s] Sacar
-[e] Extrato
-[q] Saird
+    @property
+    def saldo(self):
+        return self._saldo
 
-=> """
+    @property
+    def numero(self):
+        return self._numero
 
+    @property
+    def agencia(self):
+        return self._agencia
 
-def main():
-    saldo= 0
-    lista = []
-    LIMITE = 3
-    while True:
-        opcao = input(menu)
-        if opcao == "d":
-            valor = float(input("Informe o valor do depósito: "))
-            operacao = deposito(valor, lista)
-            if(operacao):
-                saldo+= valor
-        elif opcao == "s":
-            valor = float(input("Informe o valor do saque: "))
-            operacao = saque(valor, saldo, lista, LIMITE)
-            if(operacao):
-                saldo-= valor
-                LIMITE -=1
-            
-        elif opcao == "e":
-            extrato(lista)
-            print(f"Saldo atual: R${saldo}")
-        elif opcao == "q":
-            break
-        else:
-            print("Operação inválida, por favor selecione novamente a operação desejada.")
+    @property
+    def cliente(self):
+        return self._cliente
 
-def saque(valor,saldo, lista, LIMITE):
-    if saldo ==0:
-        print("Não há saldo na conta")
-        return
+    @property
+    def historico(self):
+        return self._historico
+
+    def sacar(self, valor):
+        pass
     
-    if LIMITE ==0:
-        print("Limite diario atingido")
-        return
-    
-    if valor >500:
-        print("Valor ultrapassa limite de saque")
-        return
-    
-    if valor > saldo:
-        print("Valor ultrapassa saldo")
-        return
-    valor
-    lista.append(f'Saque: R${valor:.2f}')
-    print("Saque Realizado")
-    return True
-    
+class ContaCorrente(Conta):
+    def __init__(self, numero, cliente, limite=500, limite_saques=3):
+        super().__init__(numero, cliente)
+        self._limite = limite
+        self._limite_saques = limite_saques
 
-    
-def deposito(valor, lista:list):
-    if valor > 0:
-        lista.append(f'Depósito: R${valor:.2f}')
-        print("Valor depositado!")
-        return True
-    else: 
-        print("Valor deve ser maior que zero") 
-        return 
+    def sacar(self, valor):
+        pass
+  
 
-def extrato(lista):
-    print("\n================ EXTRATO ================")
-    if lista:
-        for item in lista:
-            print(item)
-    else: print("Não houve operações")   
-    print("==========================================")
- 
+
+class Transacao(ABC):
+    @property
+    @abstractmethod
+    def valor(self):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def registrar(self, conta):
+        pass
     
-main()
+    
+class Deposito(Transacao):
+    def __init__(self, valor):
+        self._valor = valor
+
+    @property
+    def valor(self):
+        return self._valor
+    def registrar():
+        pass
+
+
+class Saque(Transacao):
+    def __init__(self, valor):
+        self._valor = valor
+
+    @property
+    def valor(self):
+        return self._valor
+    
+    def registrar():
+        pass
+
+
+class Historico():
+    def adicionar_transacao():
+        pass
+
+class Cliente():
+    def __init__(self, endereco):
+        self.endereco = endereco
+        self.contas = []
+
+    def realizar_transacao(self, conta, transacao:Transacao):
+        transacao.registrar(conta)
+
+    def adicionar_conta(self, conta):
+        self.contas.append(conta)
+
+
+
+class PessoaFisica(Cliente):
+    def __init__(self, nome, data_nascimento, cpf, endereco):
+        super().__init__(endereco)
+        self.nome = nome
+        self.data_nascimento = data_nascimento
+        self.cpf = cpf
+
+
